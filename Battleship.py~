@@ -1,0 +1,61 @@
+# Add in difficulty - allow dynamic board sizes.
+
+import random
+
+def print_board(board):
+    for row in board:
+        print " ".join(row)
+
+def random_row(board):
+    return random.randint(0, len(board) - 1)
+
+def random_col(board):
+    return random.randint(0, len(board[0]) - 1)
+
+def input_and_check(text):
+    result = input(text)
+    if type(result) == int:
+        return result-1
+    elif type(result) == float:
+        return round(result)-1
+    else:
+        return input_and_check("Try again! You must enter a number.")
+    
+board = []
+
+boardSize = input_and_check("How many rows and columns for this game?")+1
+guesses = input_and_check("How many guesses for this game?")+1
+
+for x in range(boardSize):
+    board.append(["O"] * boardSize)
+
+print "Let's play Battleship!"
+print_board(board)
+
+
+ship_row = random_row(board)
+ship_col = random_col(board)
+
+# Plays the game!
+for turn in range(guesses):
+    guess_row = input_and_check("Guess Row:")
+    guess_col = input_and_check("Guess Col:")
+    
+    if guess_row == ship_row and guess_col == ship_col:
+        print "Congratulations! You hit my battleship!"
+        board[guess_row][guess_col] = "!"
+        break
+    else:
+        if (guess_row < 0 or guess_row > boardSize-1) or (guess_col < 0 or guess_col > boardSize-1):
+            print "Oops, that's not even in the ocean."
+        elif(board[guess_row][guess_col] == "X"):
+            print "You guessed that one already."
+        else:
+            print "You missed my battleship!"
+        if turn >= 3:
+            print "Game Over"
+        else:
+            board[guess_row][guess_col] = "X"
+            print str(turn+1)
+            print_board(board)
+
